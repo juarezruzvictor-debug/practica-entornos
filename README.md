@@ -1,6 +1,6 @@
 # Práctica de gestión de entornos Angular
 
-Aplicación Angular con un componente hijo que identifica el entorno en pantalla.
+Ramas: main (PROD verde), qa-pending (QA naranja), uat-pending (UAT azul).
 
 ## Ejecutar
 
@@ -15,21 +15,19 @@ npm start
 npm run build
 ```
 
-## Ramas
+## Componente de entorno fuera del control de versiones
 
-- `main`: producción, verde.
-- `qa-pending`: pruebas QA, naranja.
-- `uat-pending`: aceptación UAT, azul.
+El directorio `/src/app/environment-badge/` está en `.gitignore` y su componente ya no se sigue en Git. Se retiró del índice, equivalente a `git rm --cached`, sin borrar el historial previo. No hay que editarlo ni añadirlo con `git add -f`.
 
-Las ramas vienen incluidas en el repositorio Git local. Para publicar en tu cuenta, crea un repositorio vacío `practica-entornos` en GitHub y ejecuta:
+Los scripts prestart y prebuild crean el componente local automáticamente. Leen environment-code.json, con PROD, QA o UAT según la rama, para conservar el indicador correcto tanto en un clon nuevo como en Vercel. Se versionan el generador y la configuración, pero no el componente generado. Utiliza npm start y npm run build para ejecutar estos pasos automáticamente.
+
+Comprobación después de generar:
 
 ```bash
-git remote add origin https://github.com/TU_USUARIO/practica-entornos.git
-git push -u origin main
-git push -u origin qa-pending
-git push -u origin uat-pending
+git check-ignore -v src/app/environment-badge/environment-badge.component.ts
+git ls-files src/app/environment-badge/
 ```
 
-En Vercel importa el repositorio con `main` como Production Branch y el preset Angular. Comprueba las rutas de salida que detecte Vercel. Los pushes a `qa-pending` y `uat-pending` producirán despliegues Preview. Revisa Deployment Protection si el profesor tiene que verlos sin autenticarse.
+El primer comando muestra la regla y el segundo no devuelve ningún archivo. El componente sigue existiendo localmente. En un clon limpio se crea antes de compilar; así el import de AppComponent sigue funcionando.
 
-**Nota:** el enunciado pide ignorar el componente de entorno al final. Se ha mantenido versionado porque cada rama necesita su propia versión y un `.gitignore` no afecta a archivos ya seguidos por Git. Si es imprescindible cumplir ese punto literalmente, habría que coordinar una estrategia alternativa de configuración por rama.
+Vercel compila con npm run build y publica dist/practica-entornos/browser. main es producción; qa-pending y uat-pending son Preview.
