@@ -2,6 +2,5 @@ node_modules/
 dist/
 .angular/
 .vercel/
-# Regla solicitada en la práctica. El componente continúa versionado.
-# gitignore no afecta a archivos que Git ya sigue.
-src/app/environment-badge/
+# Componente de identificación local generado antes de iniciar o compilar.
+/src/app/environment-badge/
